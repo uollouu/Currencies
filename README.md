@@ -1,3 +1,3 @@
 # Currencies
 
-# Start date 28.01.25 
+Start date 28.01.25 
