@@ -1,0 +1,25 @@
+[
+    {"name" : "Currencies",
+     "columns_data" :
+         "ID integer primary key autoincrement, \n Code varchar(50) unique, \n FullName varchar(100), \n Sign varchar(50) ",
+     "fill_data" : {
+         "columns" : ["Code", "Fullname", "Sign"],
+         "rows" : [
+            ["RUB", "Russian ruble", "₽"],
+            ["AUD", "Australian dollar", "A$"],
+            ["USD", "United States dollar", "$"]
+            ]
+        }
+     },
+    {"name" : "ExchangeRates",
+     "columns_data" :  "ID integer primary key autoincrement, \n BaseCurrencyID integer references Currencies(ID), \n TargetCurrencyID integer references Currencies(ID), \n Rate decimal(6)",
+     "fill_data" : {
+         "columns" : ["BaseCurrencyID", "TargetCurrencyID", "Rate"],
+         "rows" : [
+             ["1", "2", "50"],
+             ["2", "3", "0.5"]
+         ]
+        }
+
+     }
+]
