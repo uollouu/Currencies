@@ -48,7 +48,7 @@ class QueryFieldNotSpecifiedError(RequestException):
     RESPONSE_CODE = 400
     MESSAGE = "Form field not specified"
 
-class WrongCurrencyCodeError(RequestException):
+class InvalidCurrencyCodeError(RequestException):
     RESPONSE_CODE = 400
     MESSAGE = "Currency code must be 3 characters long"
 
@@ -59,6 +59,10 @@ class ExchangeRateAlreadyExistsError(RequestException):
 class ForeignKeyError(Exception):
     def __init__(self):
         super().__init__()
+
+class InvalidAmountError(RequestException):
+    RESPONSE_CODE = 400
+    MESSAGE = "Amount have to be a number"
 
 
 

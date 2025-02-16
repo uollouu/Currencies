@@ -1,5 +1,5 @@
 from http.server import SimpleHTTPRequestHandler, HTTPServer
-from urllib.parse import parse_qs
+from urllib.parse import parse_qs, urlparse
 
 from src.controller.controller import Controller
 
@@ -11,19 +11,26 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
         self.controller = Controller()
         super().__init__(*args, **kwargs)
 
-    def do_GET(self) -> None:
-        host, port = self.server.server_address
-        url = f"http://{host}:{port}{self.path}"
-        print({i: k for i, k in parse_qs(self.path)})
-        response: HTTPResponseData = self.controller.get(url)
+    def _send_http_response(self, response: HTTPResponseData) -> None:
 
         self.send_response(response.code)
-        self.__send_headers(response.headers)
+        self._send_headers(response.headers)
         self.wfile.write(response.message.encode('utf-8'))
 
+    def do_GET(self) -> None:
+        response: HTTPResponseData = self.controller.perform("GET", self.path)
+        self._send_http_response(response)
+
+    def do_POST(self) -> None:
+        content_len = int(self.headers["Content-Length"])
+        query = self.rfile.read(content_len).decode('UTF-8')
+
+        response: HTTPResponseData = self.controller.perform("POST",
+                                                             self.path, query)
+        self._send_http_response(response)
 
 
-    def __send_headers(self, headers: list[HTTPHeaderDTO]):
+    def _send_headers(self, headers: list[HTTPHeaderDTO]):
         for header in headers:
             self.send_header(header.keyword, header.value)
         self.end_headers()
